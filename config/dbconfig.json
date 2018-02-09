@@ -1,0 +1,6 @@
+{
+    "connectionString" : "mongodb://localhost/Blogger",
+    "options" : {"useMongoClient": true}
+}
+
+
