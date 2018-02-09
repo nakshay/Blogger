@@ -31,10 +31,20 @@ db.once('open', function() {
     console.log('Connected to database');
 });
 
-app.use('/',(req, res) => {
-    res.render('home',{blogger:'Blogger'});
+app.get('/',(req, res) => {
+    res.render('home');
+});
+app.get('/login',(req, res) => {
+    res.render('login');
+});
+app.get('/register',(req, res) => {
+    res.render('register');
 });
 
+app.get('/create',(req, res) => {
+    res.render('create');
+});
 app.listen(app.get('PORT'), () => {
     console.log("app is listening on port "+(process.env.port||8000));
 });
+
