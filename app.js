@@ -5,9 +5,13 @@ const dbconfig = require('./config/dbconfig');
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 
+mongoose.Promise = global.Promise;
+
 var exphbs  = require('express-handlebars');
 
 const app = express();
+
+const userRouter = require('./routes/user');
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
@@ -44,6 +48,16 @@ app.get('/register',(req, res) => {
 app.get('/create',(req, res) => {
     res.render('create');
 });
+
+app.get('/blogs',(req, res) => {
+    res.render('blogs');
+});
+
+//setup router 
+
+app.use('/user',userRouter);
+
+
 app.listen(app.get('PORT'), () => {
     console.log("app is listening on port "+(process.env.port||8000));
 });
