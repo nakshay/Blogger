@@ -49,14 +49,9 @@ app.get('/create',(req, res) => {
     res.render('create');
 });
 
-app.get('/blogs',(req, res) => {
-    res.render('blogs');
-});
-
 //setup router 
 
 app.use('/user',userRouter);
-
 
 app.listen(app.get('PORT'), () => {
     console.log("app is listening on port "+(process.env.port||8000));
