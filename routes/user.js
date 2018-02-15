@@ -6,9 +6,11 @@ const router = express.Router();
 
 const UserModel = require('../models/userModel');
 
+const passport = require('../auth');
+
+
 //authenitcation 
 
-const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 
@@ -32,7 +34,7 @@ router.post('/new', (req, res) => {
     });
 });
 
-router.get('/blogs', (req, res) => {
+router.get('/blogs', passport.ensureAuthenticated,(req, res) => {
     let blogs = blogModel.find({}, (err, data) => {
         if (err) {
             res.status(401).send("Error while creating blog", error);
@@ -77,53 +79,19 @@ router.post('/newUser', (req, res) => {
     });
 });
 
-
-
 router.post('/login',
     passport.authenticate('local', { successRedirect: '/user/blogs', failureRedirect: '/login', failureFlash: true }),
-    function (req, res) {
+    (req, res)=> {
         res.redirect('/user/blogs');
     });
 
-
-passport.use(new LocalStrategy(
-    function (username, password, done) {
-
-        UserModel.findUserbyUsername(username, (err, user) => {
-
-            if (err) {
-                return done(err);
-                console.log("failed username")
-            }
-            if (!user) {
-
-                return done(null, false, { message: 'Incorrect username.' });
-
-            }
-
-            UserModel.comparePassword(password, user.password, (err, isMatch) => {
-                if (err) throw err;
-                if (isMatch) {
-                    return done(null, user);
-                } else {
-                    return done(null, false, { message: 'Invalid password' });
-
-                }
-            });
-        });
-    }
-));
-
-passport.serializeUser(function (user, done) {
-    done(null, user.id);
-});
-
-
-passport.deserializeUser(function (id, done) {
-    UserModel.getUserById(id, function (err, user) {
-        done(err, user);
+    router.get('/logout',  (req, res)=> {
+        req.logout();
+        req.flash('success', "you have sucessfully logged out");
+        res.redirect('/login');
     });
-});
+
+   
 
 
 module.exports = router;

@@ -50,9 +50,13 @@ app.use(passport.session());
 
 
 app.use((req, res, next)=>{
+
 res.locals.register_error = req.flash('register_error');
 res.locals.register_success = req.flash('register_success');
 res.locals.error = req.flash('error');
+res.locals.success = req.flash('success');
+res.locals.user = req.user || null;
+
 
 next();
 });
