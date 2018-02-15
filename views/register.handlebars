@@ -4,9 +4,10 @@
             <div class="col-lg-5 mx-auto">
 
                 <div class="wrapper">
-                    <form class="form-signin">
+                    <form class="form-signin" method="POST" action="/user/newUser">
                         <h2 class="form-signin-heading">Registration</h2>
-                        <input type="text" class="form-control" name="username" placeholder="Email Address" required="" autofocus="" />
+                        <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
+                        <input type="text" class="form-control" name="email" placeholder="Email Address" required="" autofocus="" />
                         <input type="password" class="form-control" name="password" placeholder="Password" required="" /> 
                         <input type="password" class="form-control" name="confirm-password" placeholder="Confirm Password" required="" /> 
                         {{!--

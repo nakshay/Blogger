@@ -1,8 +1,10 @@
 const express = require('express');
 
-const blogModel = require('../models/blogSchema');
+const blogModel = require('../models/blogModel');
 
 const router = express.Router();
+
+const UserModel = require('../models/userModel');
 
 
 router.post('/new', (req, res) => {
@@ -48,5 +50,23 @@ router.get('/show/:id', (req, res)=>{
 
 });
 
+router.post('/newUser',(req, res)=>{
+
+    let newUser = new UserModel();
+
+    newUser.username = req.body.username;
+    newUser.email = req.body.email;
+    newUser.password = req.body.password;
+
+    UserModel.createUser(newUser, (error, user)=>{
+        if(error){
+            console.log(error);
+            res.render('register')
+        }
+        else{
+            res.redirect('/user/blogs');
+        }
+    });
+});
 
 module.exports = router;
