@@ -1,5 +1,12 @@
 <header class="masthead text-center text-white d-flex">
     <div class="container my-auto">
+
+        {{#if register_error}}
+        <div class="alert alert-danger">
+            {{register_error}}
+        </div>
+        {{/if}}
+
         <div class="row">
             <div class="col-lg-5 mx-auto">
 
@@ -8,9 +15,8 @@
                         <h2 class="form-signin-heading">Registration</h2>
                         <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
                         <input type="text" class="form-control" name="email" placeholder="Email Address" required="" autofocus="" />
-                        <input type="password" class="form-control" name="password" placeholder="Password" required="" /> 
-                        <input type="password" class="form-control" name="confirm-password" placeholder="Confirm Password" required="" /> 
-                        {{!--
+                        <input type="password" class="form-control" name="password" placeholder="Password" required="" />
+                        <input type="password" class="form-control" name="confirm-password" placeholder="Confirm Password" required="" /> {{!--
                         <label class="checkbox">
                             <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me
                         </label> --}}
@@ -24,14 +30,13 @@
 </header>
 
 <style>
-
     .wrapper {
-     
-     vertical-align: middle;  
+
+        vertical-align: middle;
     }
 
     input[type="text"] {
- 
+
         margin-bottom: 2px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;

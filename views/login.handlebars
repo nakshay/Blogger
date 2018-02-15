@@ -1,10 +1,23 @@
 <header class="masthead text-center text-white d-flex">
     <div class="container my-auto">
+          {{#if register_success}}
+        <div class="alert alert-success">
+            {{register_success}}
+        </div>
+        {{/if}}
+
+     {{#if error}}
+        <div class="alert alert-danger">
+            {{error}}
+        </div>
+        {{/if}}
+     
+
         <div class="row">
             <div class="col-md-5 mx-auto">
 
                 <div class="wrapper">
-                    <form class="form-signin">
+                    <form class="form-signin" method="POST" action="/user/login">
                         <h2 class="form-signin-heading">Please login</h2>
                         <input type="text" class="form-control" name="username" placeholder="Email Address" required="" autofocus="" />
                         <input type="password" class="form-control" name="password" placeholder="Password" required="" /> {{!--
