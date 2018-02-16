@@ -1,9 +1,17 @@
 <header class="masthead text-center text-white d-flex">
     <div class="container my-auto">
 
-        {{#if register_error}}
+        {{#if success_msg}}
+        <div class="alert alert-success">
+            {{success_msg}}
+        </div>
+        {{/if}} {{#if error}}
         <div class="alert alert-danger">
-            {{register_error}}
+            {{error}}
+        </div>
+        {{/if}} {{#if error_msg}}
+        <div class="alert alert-danger">
+            {{error_msg}}
         </div>
         {{/if}}
 

@@ -1,7 +1,9 @@
-const express = require('express');
 const path = require('path');
-const dbconfig = require('./config/dbconfig');
 
+const express = require('express');
+const app = express();
+
+const dbconfig = require('./config/dbconfig');
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 
@@ -14,13 +16,10 @@ const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
-
 const passport = require('passport');
+const auth = require('./auth');
 const LocalStrategy = require('passport-local').Strategy;
 
-
-
-const app = express();
 
 const userRouter = require('./routes/user');
 
@@ -51,10 +50,9 @@ app.use(passport.session());
 
 app.use((req, res, next)=>{
 
-res.locals.register_error = req.flash('register_error');
-res.locals.register_success = req.flash('register_success');
+res.locals.success_msg = req.flash("success_msg");
+res.locals.error_msg = req.flash("error_msg");
 res.locals.error = req.flash('error');
-res.locals.success = req.flash('success');
 res.locals.user = req.user || null;
 
 
@@ -81,7 +79,7 @@ app.get('/register', (req, res) => {
     res.render('register');
 });
 
-app.get('/create', (req, res) => {
+app.get('/create', auth.ensureAuthenticated,(req, res) => {
     res.render('create');
 });
 

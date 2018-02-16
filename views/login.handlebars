@@ -1,24 +1,18 @@
 <header class="masthead text-center text-white d-flex">
     <div class="container my-auto">
-          {{#if register_success}}
+        {{#if success_msg}}
         <div class="alert alert-success">
-            {{register_success}}
+            {{success_msg}}
         </div>
-        {{/if}}
-
-     {{#if error}}
+        {{/if}} {{#if error}}
         <div class="alert alert-danger">
             {{error}}
         </div>
-        {{/if}}
-
-          {{#if success}}
-        <div class="alert alert-success">
-            {{success}}
+        {{/if}} {{#if error_msg}}
+        <div class="alert alert-danger">
+            {{error_msg}}
         </div>
         {{/if}}
-     
-     
 
         <div class="row">
             <div class="col-md-5 mx-auto">
@@ -41,14 +35,13 @@
 </header>
 
 <style>
-
     .wrapper {
-     
-     vertical-align: middle;  
+
+        vertical-align: middle;
     }
 
     input[type="text"] {
- 
+
         margin-bottom: 2px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;

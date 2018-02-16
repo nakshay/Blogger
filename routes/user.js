@@ -6,7 +6,7 @@ const router = express.Router();
 
 const UserModel = require('../models/userModel');
 
-const passport = require('../auth');
+const auth = require('../auth');
 
 
 //authenitcation 
@@ -34,10 +34,10 @@ router.post('/new', (req, res) => {
     });
 });
 
-router.get('/blogs', passport.ensureAuthenticated,(req, res) => {
+router.get('/blogs', auth.ensureAuthenticated,(req, res) => {
     let blogs = blogModel.find({}, (err, data) => {
         if (err) {
-            res.status(401).send("Error while creating blog", error);
+            res.status(401).send("Error while showing blogs blog", error);
             return;
         }
         else {
@@ -69,25 +69,25 @@ router.post('/newUser', (req, res) => {
 
     UserModel.createUser(newUser, (error, user) => {
         if (error) {
-            req.flash('register_error', error);
+            req.flash('error_msg', error);
             res.redirect('/register')
         }
         else {
-            req.flash('register_success', "Registration sucessful please login");
+            req.flash('success_msg', "Registration sucessful please login");
             res.redirect('/login');
         }
     });
 });
 
 router.post('/login',
-    passport.authenticate('local', { successRedirect: '/user/blogs', failureRedirect: '/login', failureFlash: true }),
+auth.authenticate('local', { successRedirect: '/user/blogs', failureRedirect: '/login', failureFlash: true }),
     (req, res)=> {
         res.redirect('/user/blogs');
     });
 
     router.get('/logout',  (req, res)=> {
         req.logout();
-        req.flash('success', "you have sucessfully logged out");
+        req.flash('success_msg', "you have sucessfully logged out");
         res.redirect('/login');
     });
 
