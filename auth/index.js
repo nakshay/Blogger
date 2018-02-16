@@ -52,7 +52,7 @@ passport.ensureAuthenticated = (req ,res ,next) => {
     if(req.isAuthenticated()){
         return next();
     } else {
-        req.flash("error","you are not logged in");
+        req.flash("error","Please login first");
         res.redirect('/login');
     }
 };
