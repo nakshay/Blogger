@@ -1,8 +1,9 @@
+
 const express = require('express');
 
-const {body,validationResult} = require('express-validator/check');
+const { check,body, validationResult } = require('express-validator/check');
 
-const blogModel = require('../models/blogModel');
+const BlogModel = require('../models/blogModel');
 
 const router = express.Router();
 
@@ -19,11 +20,11 @@ const LocalStrategy = require('passport-local').Strategy;
 
 
 router.post('/new', (req, res) => {
-    let blog = new blogModel();
+    let blog = new BlogModel();
 
     blog.title = req.body.title;
     blog.content = req.body.content;
-    blog.author = 'akshay.naik';
+    blog.author = res.locals.user.username;
 
     blog.save((error) => {
         if (error) {
@@ -37,7 +38,7 @@ router.post('/new', (req, res) => {
 });
 
 router.get('/blogs', auth.ensureAuthenticated,(req, res) => {
-    let blogs = blogModel.find({}, (err, data) => {
+    let blogs = BlogModel.find({}, (err, data) => {
         if (err) {
             res.status(401).send("Error while showing blogs blog", error);
             return;
@@ -49,7 +50,7 @@ router.get('/blogs', auth.ensureAuthenticated,(req, res) => {
 });
 
 router.get('/show/:id', (req, res) => {
-    blogModel.findById(req.params.id, (error, data) => {
+    BlogModel.findById(req.params.id, (error, data) => {
         if (error) {
             res.status(401).send("Error while creating blog", error);
             return;
@@ -61,7 +62,26 @@ router.get('/show/:id', (req, res) => {
 
 });
 
-router.post('/newUser', (req, res) => {
+router.post('/newUser', [
+    //express validation starts here
+
+    check('email').isEmail().withMessage('must be an email').trim().normalizeEmail(),
+    check('password','password is must').exists(),
+    check('password2').custom((value,{req}) =>{
+      
+        if(value !== req.body.password){
+            throw new Error("veriy password does not match");
+        }
+        else{
+            return value;
+        }
+    })
+       
+],(req, res) => {
+
+
+    const valError = validationResult(req);
+    console.log(valError.array());  
 
     let newUser = new UserModel();
 

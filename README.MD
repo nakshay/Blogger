@@ -1,1 +1,1 @@
-Blogger app in Node-Express with authentication Edit
+Blogger app in Node-Express with authentication

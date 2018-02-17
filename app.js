@@ -38,7 +38,8 @@ app.use(cookieParser());
 app.use(session({
     saveUninitialized: true,
     resave: 'true',
-    secret: 'secret'
+    secret: 'secret',
+    cookie: { maxAge : 3600000 } 
 }));
 app.use(flash());
 
