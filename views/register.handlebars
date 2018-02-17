@@ -1,5 +1,10 @@
 <header class="masthead text-center text-white d-flex">
     <div class="container my-auto">
+        {{#each error_msg_array}}
+            <div class="alert alert-danger">
+            {{msg}}
+        </div>
+        {{/each}}
 
         {{#if success_msg}}
         <div class="alert alert-success">

@@ -65,12 +65,12 @@ router.get('/show/:id', (req, res) => {
 router.post('/newUser', [
     //express validation starts here
 
-    check('email').isEmail().withMessage('must be an email').trim().normalizeEmail(),
+    check('email').isEmail().withMessage('email address is invalid').trim().normalizeEmail(),
     check('password','password is must').exists(),
     check('password2').custom((value,{req}) =>{
       
         if(value !== req.body.password){
-            throw new Error("veriy password does not match");
+            throw new Error("verify password does not match");
         }
         else{
             return value;
@@ -81,7 +81,13 @@ router.post('/newUser', [
 
 
     const valError = validationResult(req);
-    console.log(valError.array());  
+    console.log(valError.array().length);  
+
+    if(valError.array().length>0) {
+        req.flash('error_msg_array', valError.array());
+         res.redirect('/register')
+         return;
+    }
 
     let newUser = new UserModel();
 
