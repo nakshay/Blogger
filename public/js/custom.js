@@ -4,10 +4,10 @@ $(document).ready(function(){
         var id = $(this).attr('data-id'); 
         $.ajax({
             type: "DELETE",
-            url: "/user/deleteblog/"+id,
+            url: "/blog/deleteblog/"+id,
             success: function(result) {
                 alert('deleting');
-                window.location='/user/blogs'
+                window.location='/blog/all'
             }
         });
     });

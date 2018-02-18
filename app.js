@@ -22,6 +22,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 
 const userRouter = require('./routes/user');
+const blogRouter = require('./routes/blog');
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
@@ -88,6 +89,8 @@ app.get('/create', auth.ensureAuthenticated,(req, res) => {
 //setup router 
 
 app.use('/user', userRouter);
+
+app.use('/blog',blogRouter);
 
 app.listen(app.get('PORT'), () => {
     console.log("app is listening on port " + (process.env.port || 8000));
