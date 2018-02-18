@@ -104,7 +104,9 @@ router.get('/show/:id', (req, res) => {
             return;
         }
         else {
-            res.render('show', { data });
+            
+            let allowed = res.locals.user.username == data.author;
+            res.render('show', { data,allowed});
         }
     });
 

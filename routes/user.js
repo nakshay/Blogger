@@ -15,8 +15,6 @@ const auth = require('../auth');
 
 const LocalStrategy = require('passport-local').Strategy;
 
-
-
 router.post('/newUser', [
     //express validation starts here
 
@@ -72,8 +70,6 @@ router.get('/logout', (req, res) => {
     req.flash('success_msg', "you have sucessfully logged out");
     res.redirect('/login');
 });
-
-
 
 
 module.exports = router;

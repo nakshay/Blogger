@@ -7,12 +7,14 @@
         <div class="row">
             {{data.content}}
         </div>
+
+        {{#if allowed}}
        <span>
        <a class="btn btn-success" href="/blog/edit/{{data._id}}" role="button">Edit</a>
        </span>
        <span>
-    
        <a id="deletebtn" data-id="{{data._id}}" class="btn btn-danger">Delete Blog </a>
        </span>
+       {{/if}}
     </div>
 </header>
