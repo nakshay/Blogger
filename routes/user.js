@@ -1,7 +1,7 @@
 
 const express = require('express');
 
-const { check,body, validationResult } = require('express-validator/check');
+const { check, body, validationResult } = require('express-validator/check');
 
 const BlogModel = require('../models/blogModel');
 
@@ -24,7 +24,7 @@ router.post('/new', (req, res) => {
 
     blog.title = req.body.title;
     blog.content = req.body.content;
-    blog.author = res.locals.user.username;
+    blog.author = res.locals.user.author;
 
     blog.save((error) => {
         if (error) {
@@ -37,10 +37,53 @@ router.post('/new', (req, res) => {
     });
 });
 
-router.get('/blogs', auth.ensureAuthenticated,(req, res) => {
+router.get('/edit/:id', (req, res) => {
+
+    BlogModel.findById(req.params.id, (error, data) => {
+        if (error) {
+            res.status(401).send("Error while editing  blog", error);
+            return;
+        }
+        else {
+            res.render('edit', { data });
+        }
+    });
+
+
+});
+
+router.post('/update/:id', (req, res) => {
+
+    let title = req.body.title;
+    let content = req.body.content;
+
+    let blog = {};
+
+    blog.title = req.body.title;
+    blog.content = req.body.content;
+    blog.author = res.locals.user.username;
+
+
+
+
+    BlogModel.update({_id:req.params.id}, blog, (err) => {
+        
+        if (err) {
+            res.status(401).send("Error while updating blog", err);
+            return;
+        }
+        else {
+            res.redirect('/user/show/'+req.params.id);
+        }
+    }
+    );
+});
+
+
+router.get('/blogs', auth.ensureAuthenticated, (req, res) => {
     let blogs = BlogModel.find({}, (err, data) => {
         if (err) {
-            res.status(401).send("Error while showing blogs blog", error);
+            res.status(401).send("Error while showing  blog", error);
             return;
         }
         else {
@@ -66,27 +109,26 @@ router.post('/newUser', [
     //express validation starts here
 
     check('email').isEmail().withMessage('email address is invalid').trim().normalizeEmail(),
-    check('password','password is must').exists(),
-    check('password2').custom((value,{req}) =>{
-      
-        if(value !== req.body.password){
+    check('password', 'password is must').exists(),
+    check('password2').custom((value, { req }) => {
+
+        if (value !== req.body.password) {
             throw new Error("verify password does not match");
         }
-        else{
+        else {
             return value;
         }
     })
-       
-],(req, res) => {
+
+], (req, res) => {
 
 
     const valError = validationResult(req);
-    console.log(valError.array().length);  
 
-    if(valError.array().length>0) {
+    if (valError.array().length > 0) {
         req.flash('error_msg_array', valError.array());
-         res.redirect('/register')
-         return;
+        res.redirect('/register')
+        return;
     }
 
     let newUser = new UserModel();
@@ -108,18 +150,18 @@ router.post('/newUser', [
 });
 
 router.post('/login',
-auth.authenticate('local', { successRedirect: '/user/blogs', failureRedirect: '/login', failureFlash: true }),
-    (req, res)=> {
+    auth.authenticate('local', { successRedirect: '/user/blogs', failureRedirect: '/login', failureFlash: true }),
+    (req, res) => {
         res.redirect('/user/blogs');
     });
 
-    router.get('/logout',  (req, res)=> {
-        req.logout();
-        req.flash('success_msg', "you have sucessfully logged out");
-        res.redirect('/login');
-    });
+router.get('/logout', (req, res) => {
+    req.logout();
+    req.flash('success_msg', "you have sucessfully logged out");
+    res.redirect('/login');
+});
 
-   
+
 
 
 module.exports = router;

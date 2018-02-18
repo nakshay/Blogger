@@ -1,0 +1,45 @@
+<header class="masthead text-center text-white d-flex">
+    <div class="container my-auto">
+        <div class="row">
+            <div class="col-md-10 mx-auto">
+
+                <div class="wrapper">
+                    <form class="form-blog" method="POST" action="/user/update/{{data._id}}">
+                        <h2 class="form-blog-heading">Update your blog</h2>
+                        <input type="text" class="form-control" name="title" placeholder="Title" value="{{data.title}}" required="" autofocus="" />
+                        <textarea name="content" class="form-control" rows="10" 
+                         placeholder="Write blog here"
+                        > {{data.content}}</textarea>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Update</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</header>
+
+<style>
+
+    .wrapper {
+     
+     vertical-align: middle;  
+    }
+
+    input[type="text"] {
+ 
+        margin-bottom: 2px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+.blog-content {
+
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+
+}
+button{
+    margin-top: 5px;
+}
+
+</style>
