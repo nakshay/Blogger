@@ -18,17 +18,16 @@ const LocalStrategy = require('passport-local').Strategy;
 
 
 
-
 router.post('/new', (req, res) => {
     let blog = new BlogModel();
 
     blog.title = req.body.title;
     blog.content = req.body.content;
-    blog.author = res.locals.user.author;
+    blog.author = res.locals.user.username;
 
     blog.save((error) => {
         if (error) {
-            res.status(401).send("Error while creating blog", error);
+            res.send("Error while creating blog",error);
             return;
         } else {
             res.redirect('/user/blogs');
@@ -49,6 +48,22 @@ router.get('/edit/:id', (req, res) => {
         }
     });
 
+});
+
+
+router.delete('/deleteblog/:id',(req, res) => {
+    var id =  req.params.id;
+    var query = {_id: id};
+
+    BlogModel.remove(query, (err) => {
+        if (err){
+            console.log(err);
+            return;
+        }
+        else{
+            res.end();
+        }
+    });
 
 });
 
