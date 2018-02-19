@@ -7,8 +7,7 @@ const auth = require('../auth');
 
 router.post('/new', (req, res) => {
 
-    if(res.locals.user === null)
-    {
+    if (res.locals.user === null) {
         res.redirect('/login');
         return;
     }
@@ -21,7 +20,7 @@ router.post('/new', (req, res) => {
 
     blog.save((error) => {
         if (error) {
-            res.send("Error while creating blog",error);
+            res.send("Error while creating blog", error);
             return;
         } else {
             res.redirect('/blog/all');
@@ -59,16 +58,16 @@ router.get('/edit/:id', (req, res) => {
 });
 
 
-router.delete('/deleteblog/:id',(req, res) => {
-    var id =  req.params.id;
-    var query = {_id: id};
+router.delete('/deleteblog/:id', (req, res) => {
+    var id = req.params.id;
+    var query = { _id: id };
 
     BlogModel.remove(query, (err) => {
-        if (err){
+        if (err) {
             console.log(err);
             return;
         }
-        else{
+        else {
             res.end();
         }
     });
@@ -77,8 +76,7 @@ router.delete('/deleteblog/:id',(req, res) => {
 
 router.post('/update/:id', (req, res) => {
 
-    if(res.locals.user === null)
-    {
+    if (res.locals.user === null) {
         res.redirect('/login');
         return;
     }
@@ -95,14 +93,14 @@ router.post('/update/:id', (req, res) => {
 
 
 
-    BlogModel.update({_id:req.params.id}, blog, (err) => {
-        
+    BlogModel.update({ _id: req.params.id }, blog, (err) => {
+
         if (err) {
             res.status(401).send("Error while updating blog", err);
             return;
         }
         else {
-            res.redirect('/blog/show/'+req.params.id);
+            res.redirect('/blog/show/' + req.params.id);
         }
     }
     );
@@ -111,9 +109,8 @@ router.post('/update/:id', (req, res) => {
 
 
 router.get('/show/:id', (req, res) => {
-    
-    if(res.locals.user === null)
-    {
+
+    if (res.locals.user === null) {
         res.redirect('/login');
         return;
     }
@@ -124,9 +121,9 @@ router.get('/show/:id', (req, res) => {
             return;
         }
         else {
-            
+
             let allowed = res.locals.user.username == data.author;
-            res.render('show', { data,allowed});
+            res.render('show', { data, allowed });
         }
     });
 });
@@ -138,12 +135,70 @@ router.post('/comment/:id', (req, res) => {
             return;
         }
         else {
-            var comment = {"comment": req.body.comment, "commentor": req.body.commentor};
+            var comment = { "comment": req.body.comment, "commentor": req.body.commentor };
             blog.comments.push(comment)
-            blog.save(()=>{
+            blog.save(() => {
                 res.end();
             });
-         
+
+        }
+    });
+});
+
+router.post('/like/:id', (req, res) => {
+    BlogModel.findById(req.params.id, (error, blog) => {
+        if (error) {
+            res.status(401).send("Error while searching blog", error);
+            return;
+        }
+        else {
+
+            blog.total_likes = blog.total_likes + 1;
+
+            let user = blog.users.filter(user => user.username === req.body.commentor)[0];
+            if (typeof (user) === 'undefined') {
+                user = { username: req.body.commentor, like: 1, dislike: 0 }
+                blog.users.push(user);
+            }
+            else {
+
+                user = { username: req.body.commentor, like: 1, dislike: 0 }
+                let index = blog.users.indexOf(blog.users.filter(user => user.username === req.body.commentor)[0]);
+                blog.users.splice(index,1,user);
+            }
+     
+            blog.save(() => {
+                res.end();
+            });
+
+        }
+    });
+});
+
+router.post('/dislike/:id', (req, res) => {
+    BlogModel.findById(req.params.id, (error, blog) => {
+        if (error) {
+            res.status(401).send("Error while searching blog", error);
+            return;
+        }
+        else {
+            blog.total_dislikes = blog.total_dislikes + 1;
+
+            let user = blog.users.filter(user => user.username === req.body.commentor)[0];
+            if (typeof (user) === 'undefined') {
+                user = { username: req.body.commentor, like: 0, dislike: 1 }
+                blog.users.push(user);
+            }
+            else {
+
+                user = { username: req.body.commentor, like: 0, dislike: 1 }
+                let index = blog.users.indexOf(blog.users.filter(user => user.username === req.body.commentor)[0]);
+                blog.users.splice(index,1,user);
+            }
+           
+            blog.save(() => {
+                res.end();
+            });
         }
     });
 });
