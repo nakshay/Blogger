@@ -6,6 +6,13 @@ const BlogModel = require('../models/blogModel');
 const auth = require('../auth');
 
 router.post('/new', (req, res) => {
+
+    if(res.locals.user === null)
+    {
+        res.redirect('/login');
+        return;
+    }
+
     let blog = new BlogModel();
 
     blog.title = req.body.title;
@@ -70,6 +77,12 @@ router.delete('/deleteblog/:id',(req, res) => {
 
 router.post('/update/:id', (req, res) => {
 
+    if(res.locals.user === null)
+    {
+        res.redirect('/login');
+        return;
+    }
+
     let title = req.body.title;
     let content = req.body.content;
 
@@ -98,6 +111,13 @@ router.post('/update/:id', (req, res) => {
 
 
 router.get('/show/:id', (req, res) => {
+    
+    if(res.locals.user === null)
+    {
+        res.redirect('/login');
+        return;
+    }
+
     BlogModel.findById(req.params.id, (error, data) => {
         if (error) {
             res.status(401).send("Error while creating blog", error);
@@ -109,9 +129,23 @@ router.get('/show/:id', (req, res) => {
             res.render('show', { data,allowed});
         }
     });
-
 });
 
-
+router.post('/comment/:id', (req, res) => {
+    BlogModel.findById(req.params.id, (error, blog) => {
+        if (error) {
+            res.status(401).send("Error while searching blog", error);
+            return;
+        }
+        else {
+            var comment = {"comment": req.body.comment, "commentor": req.body.commentor};
+            blog.comments.push(comment)
+            blog.save(()=>{
+                res.end();
+            });
+         
+        }
+    });
+});
 
 module.exports = router;

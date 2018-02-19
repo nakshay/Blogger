@@ -12,6 +12,20 @@ const blogSchema= mongoose.Schema({
       content : {
         type : String,
         required : true 
+      },
+      total_likes : {
+        type : Number,
+        default: 0
+      },
+      total_dislikes : {
+        type : Number,
+        default: 0
+      },
+      comments: {
+        type : []
+      },
+      users: {
+        type :[]
       }
 });
 

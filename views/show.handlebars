@@ -1,20 +1,48 @@
 <header class="masthead text-center text-white d-flex">
     <div class="container my-auto">
         <div class="wrapper">
-             <h2 class="form-signin-heading">  {{data.title}} - {{data.author}}</h2>
+                 {{data.title}} - {{data.author}} 
+            {{#if allowed}}
+            <span>
+                <a class="btn btn-success" href="/blog/edit/{{data._id}}" role="button">Edit</a>
+            </span>
+            <span>
+                <a id="deletebtn" data-id="{{data._id}}" class="btn btn-danger">Delete Blog </a>
+            </span>
+            {{/if}}
+            <hr>
+         <button type="button" class="btn btn-success btn-sm">
+            Like
+        </button>
+        <button type="button" class="btn btn-danger btn-sm">
+            Dislike
+        </button>
+         likes {{data.total_likes}} |
+         Dislikes {{data.total_dislikes}}
+
         </div>
-     
+       
         <div class="row">
             {{data.content}}
         </div>
-
-        {{#if allowed}}
-       <span>
-       <a class="btn btn-success" href="/blog/edit/{{data._id}}" role="button">Edit</a>
-       </span>
-       <span>
-       <a id="deletebtn" data-id="{{data._id}}" class="btn btn-danger">Delete Blog </a>
-       </span>
-       {{/if}}
+         <hr>
+         <input type="text" placeholder="Comment here" id="commentTxt" class="form-control">
+         <br/>
+        <a class="btn btn-primary" id="commentBtn" data-id="{{data._id}}|{{user.username}}" >Comment</a>
+        <hr>
+        {{#each data.comments }}
+          <div class="comment">
+            {{this.comment}} - {{this.commentor}}
+        </div>
+        {{/each}}
     </div>
+
 </header>
+
+<style>
+    .comment {
+        background-color: floralwhite;
+        color: black;
+        margin-top: 5px;
+           }
+</style>
