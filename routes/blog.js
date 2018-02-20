@@ -129,13 +129,24 @@ router.get('/show/:id', (req, res) => {
 });
 
 router.post('/comment/:id', (req, res) => {
+
+    let commentor;
+    if (res.locals.user === null) {
+        res.redirect('/login');
+        return;
+    }
+    else{
+        commentor=res.locals.user.username;
+    }
+    
     BlogModel.findById(req.params.id, (error, blog) => {
+        
         if (error) {
             res.status(401).send("Error while searching blog", error);
             return;
         }
         else {
-            var comment = { "comment": req.body.comment, "commentor": req.body.commentor };
+            var comment = { "comment": req.body.comment, "commentor":commentor};
             blog.comments.push(comment)
             blog.save(() => {
                 res.end();
@@ -146,24 +157,37 @@ router.post('/comment/:id', (req, res) => {
 });
 
 router.post('/like/:id', (req, res) => {
+
+let commentor;
+    if (res.locals.user === null) {
+        res.redirect('/login');
+        return;
+    }
+    else{
+        commentor=res.locals.user.username;
+    }
+
     BlogModel.findById(req.params.id, (error, blog) => {
+
         if (error) {
             res.status(401).send("Error while searching blog", error);
             return;
         }
         else {
-
-            blog.total_likes = blog.total_likes + 1;
-
-            let user = blog.users.filter(user => user.username === req.body.commentor)[0];
+            let user = blog.users.filter(user => user.username === commentor)[0];
             if (typeof (user) === 'undefined') {
-                user = { username: req.body.commentor, like: 1, dislike: 0 }
+                user = { username: commentor, like: 1, dislike: 0 }
+                blog.total_likes = blog.total_likes + 1;
                 blog.users.push(user);
             }
             else {
-
-                user = { username: req.body.commentor, like: 1, dislike: 0 }
-                let index = blog.users.indexOf(blog.users.filter(user => user.username === req.body.commentor)[0]);
+                if(!(user.like === 1))
+                {
+                    blog.total_likes = blog.total_likes + 1;
+                    blog.total_dislikes = blog.total_dislikes - 1;
+                }
+                user = { username: commentor, like: 1, dislike: 0 }
+                let index = blog.users.indexOf(blog.users.filter(user => user.username === commentor)[0]);
                 blog.users.splice(index,1,user);
             }
      
@@ -176,23 +200,37 @@ router.post('/like/:id', (req, res) => {
 });
 
 router.post('/dislike/:id', (req, res) => {
+let commentor;
+    if (res.locals.user === null) {
+        res.redirect('/login');
+        return;
+    }
+    else{
+        commentor=res.locals.user.username;
+    }
+
     BlogModel.findById(req.params.id, (error, blog) => {
         if (error) {
             res.status(401).send("Error while searching blog", error);
             return;
         }
         else {
-            blog.total_dislikes = blog.total_dislikes + 1;
-
-            let user = blog.users.filter(user => user.username === req.body.commentor)[0];
+            let user = blog.users.filter(user => user.username === commentor)[0];
             if (typeof (user) === 'undefined') {
-                user = { username: req.body.commentor, like: 0, dislike: 1 }
+                user = { username: commentor, like: 0, dislike: 1 }
+                blog.total_dislikes = blog.total_dislikes + 1;
                 blog.users.push(user);
             }
             else {
 
-                user = { username: req.body.commentor, like: 0, dislike: 1 }
-                let index = blog.users.indexOf(blog.users.filter(user => user.username === req.body.commentor)[0]);
+                if(!(user.dislike ===1))
+                {
+                    blog.total_dislikes = blog.total_dislikes + 1;
+                    blog.total_likes = blog.total_likes - 1;
+                }
+
+                user = { username: commentor, like: 0, dislike: 1 }
+                let index = blog.users.indexOf(blog.users.filter(user => user.username === commentor)[0]);
                 blog.users.splice(index,1,user);
             }
            
