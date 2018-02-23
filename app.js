@@ -3,6 +3,8 @@ const path = require('path');
 const express = require('express');
 const app = express();
 
+var morgan = require('morgan')
+
 const dbconfig = require('./config/dbconfig');
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
@@ -30,6 +32,9 @@ app.set('view engine', 'handlebars');
 app.set('PORT', process.env.port || 8000);
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+app.use(morgan('tiny'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
